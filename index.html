@@ -404,14 +404,13 @@ for(let i=0;i<14;i++){
 function drawBg(){
   bgCtx.clearRect(0,0,window.innerWidth, window.innerHeight);
   // radial ambient glow center
-  const g = bgCtx.createRadialGradient(
+const g = bgCtx.createRadialGradient(
     window.innerWidth/2, window.innerHeight*0.55, 10,
     window.innerWidth/2, window.innerHeight*0.55, window.innerWidth*0.55
   );
-  g.addColorStop(0, 'rgba(5,150,102,0.10)');
-  g.addColorStop(0.4, 'rgba(5,150,102,0.04)');
-  g.addColorStop(1, 'rgba(3,3,16,0)');
-  bgCtx.fillStyle = g;
+  g.addColorStop(0, 'rgba(90, 20, 140, 0.25)'); // إضاءة بنفسجية في المنتصف
+  g.addColorStop(0.5, 'rgba(25, 5, 40, 0.8)');
+  g.addColorStop(1, '#07020d');                 // بنفسجي غامق جداً  bgCtx.fillStyle = g;
   bgCtx.fillRect(0,0,window.innerWidth, window.innerHeight);
 
   streaks.forEach(s=>{
@@ -550,7 +549,7 @@ function setupComposer(){
 setupComposer();
 
 // Lighting — soft key/rim/fill trio plus a hemisphere for believable, flicker-free ambient
-const hemi = new THREE.HemisphereLight(0x28483e, 0x05070a, 0.55);
+const hemi = new THREE.HemisphereLight(0x5a189a, 0x07020d, 0.6);
 scene.add(hemi);
 
 const ambient = new THREE.AmbientLight(0x1c2620, 0.25);
