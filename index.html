@@ -5,16 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mystery Reward — FundedForYou</title>
 <style>
- :root{
+  :root{
     --green:#059666;
     --green-bright:#0bd696;
     --green-dim:#04412e;
-    
-    /* التعديل هنا لدرجات البنفسجي الغامق جداً */
-    --bg:#07020d;     /* لون الخلفية الرئيسي */
-    --bg-2:#0f051a;   /* لون الدرجة الثانية */
-    --card:#150824;   /* لون البطاقات */
-    
+    --bg:#030310;
+    --bg-2:#060618;
+    --card:#0a0a1c;
     --text:#eef8f3;
     --text-dim:#7b8a8a;
   }
@@ -46,11 +43,11 @@
     opacity:0.7;
   }
 
-.vignette{
+  .vignette{
     position:fixed;inset:0;z-index:2;pointer-events:none;
-    background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(7,2,13,0.9) 100%);
+    background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(3,3,16,0.9) 100%);
   }
-  
+
   #scene-container{
     position:fixed;inset:0;z-index:3;
   }
@@ -403,14 +400,38 @@ for(let i=0;i<14;i++){
 }
 function drawBg(){
   bgCtx.clearRect(0,0,window.innerWidth, window.innerHeight);
-  // radial ambient glow center
-const g = bgCtx.createRadialGradient(
+
+  // dark corner falloff first (studio backdrop feel)
+  const corner = bgCtx.createRadialGradient(
+    window.innerWidth/2, window.innerHeight*0.5, window.innerWidth*0.15,
+    window.innerWidth/2, window.innerHeight*0.5, window.innerWidth*0.75
+  );
+  corner.addColorStop(0, 'rgba(3,3,16,0)');
+  corner.addColorStop(1, 'rgba(1,1,8,0.6)');
+  bgCtx.fillStyle = corner;
+  bgCtx.fillRect(0,0,window.innerWidth, window.innerHeight);
+
+  // stage spotlight directly behind the box — brighter, neutral-cool, gives it a pedestal to sit on
+  const spot = bgCtx.createRadialGradient(
+    window.innerWidth/2, window.innerHeight*0.52, 10,
+    window.innerWidth/2, window.innerHeight*0.52, window.innerWidth*0.28
+  );
+  spot.addColorStop(0, 'rgba(70,110,100,0.22)');
+  spot.addColorStop(0.35, 'rgba(11,214,150,0.10)');
+  spot.addColorStop(0.7, 'rgba(5,150,102,0.04)');
+  spot.addColorStop(1, 'rgba(3,3,16,0)');
+  bgCtx.fillStyle = spot;
+  bgCtx.fillRect(0,0,window.innerWidth, window.innerHeight);
+
+  // wider ambient glow
+  const g = bgCtx.createRadialGradient(
     window.innerWidth/2, window.innerHeight*0.55, 10,
     window.innerWidth/2, window.innerHeight*0.55, window.innerWidth*0.55
   );
-  g.addColorStop(0, 'rgba(90, 20, 140, 0.25)'); // إضاءة بنفسجية في المنتصف
-  g.addColorStop(0.5, 'rgba(25, 5, 40, 0.8)');
-  g.addColorStop(1, '#07020d');                 // بنفسجي غامق جداً  bgCtx.fillStyle = g;
+  g.addColorStop(0, 'rgba(5,150,102,0.08)');
+  g.addColorStop(0.4, 'rgba(5,150,102,0.03)');
+  g.addColorStop(1, 'rgba(3,3,16,0)');
+  bgCtx.fillStyle = g;
   bgCtx.fillRect(0,0,window.innerWidth, window.innerHeight);
 
   streaks.forEach(s=>{
@@ -549,13 +570,13 @@ function setupComposer(){
 setupComposer();
 
 // Lighting — soft key/rim/fill trio plus a hemisphere for believable, flicker-free ambient
-const hemi = new THREE.HemisphereLight(0x5a189a, 0x07020d, 0.6);
+const hemi = new THREE.HemisphereLight(0x28483e, 0x05070a, 0.55);
 scene.add(hemi);
 
 const ambient = new THREE.AmbientLight(0x1c2620, 0.25);
 scene.add(ambient);
 
-const keyLight = new THREE.DirectionalLight(0xfff2e0, 0.75);
+const keyLight = new THREE.DirectionalLight(0xfff2e0, 0.95);
 keyLight.position.set(4, 6, 5);
 keyLight.castShadow = true;
 keyLight.shadow.mapSize.set(2048,2048);
@@ -566,7 +587,7 @@ keyLight.shadow.radius = 8;
 keyLight.shadow.blurSamples = 16;
 scene.add(keyLight);
 
-const rimLight = new THREE.DirectionalLight(0x0bd696, 0.55);
+const rimLight = new THREE.DirectionalLight(0x0bd696, 0.85);
 rimLight.position.set(-5, 3, -4);
 scene.add(rimLight);
 
@@ -617,9 +638,9 @@ scene.add(glowDisc);
 const boxGroup = new THREE.Group();
 scene.add(boxGroup);
 
-const darkMat = new THREE.MeshPhysicalMaterial({ color:0x0d1220, metalness:0.75, roughness:0.32, clearcoat:0.5, clearcoatRoughness:0.35 });
-const darkMatLighter = new THREE.MeshPhysicalMaterial({ color:0x161d32, metalness:0.65, roughness:0.38, clearcoat:0.4, clearcoatRoughness:0.4 });
-const metalTrim = new THREE.MeshPhysicalMaterial({ color:0xc4ccd2, metalness:0.95, roughness:0.18, clearcoat:0.6, clearcoatRoughness:0.15 });
+const darkMat = new THREE.MeshPhysicalMaterial({ color:0x232d45, metalness:0.72, roughness:0.3, clearcoat:0.55, clearcoatRoughness:0.3 });
+const darkMatLighter = new THREE.MeshPhysicalMaterial({ color:0x2c3a58, metalness:0.62, roughness:0.36, clearcoat:0.45, clearcoatRoughness:0.35 });
+const metalTrim = new THREE.MeshPhysicalMaterial({ color:0xd4dce2, metalness:0.95, roughness:0.16, clearcoat:0.65, clearcoatRoughness:0.12 });
 const greenEmissive = new THREE.MeshStandardMaterial({ color:0x0bd696, emissive:0x0bd696, emissiveIntensity:1.4, metalness:0.2, roughness:0.3 });
 
 // base body
@@ -652,32 +673,48 @@ const triMesh = new THREE.Mesh(triGeo, triMat);
 triMesh.position.set(0, 0.35, 0.951);
 boxGroup.add(triMesh);
 
-// Logo "F" using simple extruded plane w/ canvas texture (brand mark)
-function makeLogoTexture(){
+// Logo — real brand mark loaded from FundedForYou, with a graceful canvas fallback
+function makeFallbackLogoTexture(){
   const c = document.createElement('canvas');
-  c.width = 256; c.height = 256;
+  c.width = 512; c.height = 512;
   const ctx2 = c.getContext('2d');
-  ctx2.clearRect(0,0,256,256);
-  ctx2.font = '700 190px Georgia';
-  const grad = ctx2.createLinearGradient(40,20,200,230);
+  ctx2.clearRect(0,0,512,512);
+  const grad = ctx2.createLinearGradient(80,40,400,460);
   grad.addColorStop(0, '#eafff5');
   grad.addColorStop(1, '#0bd696');
   ctx2.fillStyle = grad;
   ctx2.textAlign = 'center';
   ctx2.textBaseline = 'middle';
-  ctx2.save();
-  ctx2.translate(128,140);
-  ctx2.font = 'italic 700 190px Georgia';
-  ctx2.fillText('F', 0, 0);
-  ctx2.restore();
+  ctx2.font = 'italic 700 380px Georgia';
+  ctx2.fillText('F', 256, 280);
   return new THREE.CanvasTexture(c);
 }
-const logoTex = makeLogoTexture();
-const logoMat = new THREE.MeshBasicMaterial({ map: logoTex, transparent:true, blending: THREE.AdditiveBlending });
-const logoGeo = new THREE.PlaneGeometry(0.75, 0.75);
+const logoMat = new THREE.MeshBasicMaterial({ map: makeFallbackLogoTexture(), transparent:true, blending: THREE.NormalBlending, depthWrite:false });
+const logoGeo = new THREE.PlaneGeometry(1.05, 1.05);
 const logoMesh = new THREE.Mesh(logoGeo, logoMat);
 logoMesh.position.set(0, -0.35, 0.952);
 boxGroup.add(logoMesh);
+
+const brandLoader = new THREE.TextureLoader();
+brandLoader.setCrossOrigin('anonymous');
+brandLoader.load(
+  'https://fundedforyou.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.0jhu2sdsnigg9.png&w=1920&q=75',
+  function(tex){
+    if(THREE.sRGBEncoding) tex.encoding = THREE.sRGBEncoding;
+    logoMat.map = tex;
+    logoMat.needsUpdate = true;
+    // size the plane to the image's real aspect ratio so the logo isn't stretched
+    const img = tex.image;
+    if(img && img.width && img.height){
+      const aspect = img.width / img.height;
+      const h = 0.85;
+      logoMesh.scale.set(aspect, 1, 1);
+      logoMesh.geometry = new THREE.PlaneGeometry(h*aspect, h);
+    }
+  },
+  undefined,
+  function(){ /* CORS or network issue — fallback canvas mark stays in place */ }
+);
 
 // side handle (small detail on right side)
 const handleGeo = new THREE.BoxGeometry(0.08, 0.35, 0.5);
