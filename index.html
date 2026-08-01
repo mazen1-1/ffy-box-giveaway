@@ -5,13 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Mystery Reward — FundedForYou</title>
 <style>
-  :root{
+ :root{
     --green:#059666;
     --green-bright:#0bd696;
     --green-dim:#04412e;
-    --bg:#030310;
-    --bg-2:#060618;
-    --card:#0a0a1c;
+    
+    /* التعديل هنا لدرجات البنفسجي الغامق جداً */
+    --bg:#07020d;     /* لون الخلفية الرئيسي */
+    --bg-2:#0f051a;   /* لون الدرجة الثانية */
+    --card:#150824;   /* لون البطاقات */
+    
     --text:#eef8f3;
     --text-dim:#7b8a8a;
   }
@@ -43,11 +46,11 @@
     opacity:0.7;
   }
 
-  .vignette{
+.vignette{
     position:fixed;inset:0;z-index:2;pointer-events:none;
-    background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(3,3,16,0.9) 100%);
+    background:radial-gradient(ellipse 90% 80% at 50% 50%, transparent 40%, rgba(7,2,13,0.9) 100%);
   }
-
+  
   #scene-container{
     position:fixed;inset:0;z-index:3;
   }
